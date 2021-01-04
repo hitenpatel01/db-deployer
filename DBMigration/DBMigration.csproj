@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Scripts\Functions\000001-GetPersonNameById.sql" />
+    <None Remove="Scripts\Schemas\000001-Data.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\Functions\000001-GetPersonNameById.sql" />
+    <EmbeddedResource Include="Scripts\PostDeploymentScripts\000001-PostDeploymentScript.sql" />
+    <EmbeddedResource Include="Scripts\PreDeploymentScripts\000001-PreDeploymentScript.sql" />
+    <EmbeddedResource Include="Scripts\Schemas\000001-Data.sql" />
+    <EmbeddedResource Include="Scripts\StoredProcedures\000001-GetPersonById.sql" />
+    <EmbeddedResource Include="Scripts\Tables\000002-AlterPersonAddDob.sql" />
+    <EmbeddedResource Include="Scripts\Tables\000001-CreatePersonTable.sql" />
+    <EmbeddedResource Include="Scripts\Views\000001-PersonName.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="dbup-sqlserver" Version="4.5.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20574.7" />
+    <PackageReference Include="System.CommandLine.DragonFruit" Version="0.3.0-alpha.20574.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Message Text="@(Content)" Importance="high" Condition="%(Content.Extension) == '.sql'" />
+    <Error Condition="%(Content.Extension) == '.sql'" Text="Some scripts should be marked as Content, please check your scripts are marked as Embedded Resource" />
+  </Target>
+
+</Project>

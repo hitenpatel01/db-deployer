@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "DBMigration": {
+      "commandName": "Project"
+    }
+  }
+}
